@@ -27,6 +27,11 @@ def login():
     return render_template('login.html')
 
 
+@app.route('/logout')
+def logout():
+    pass
+
+
 @app.route('user/<int:user_id>/<int:image_id>/upload_image')
 def imageUpload(user_id, image_id):
     pass
