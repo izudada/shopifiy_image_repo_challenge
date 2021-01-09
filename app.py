@@ -27,6 +27,31 @@ def login():
     return render_template('login.html')
 
 
+@app.route('user/<int:user_id>/<int:image_id>/upload_image')
+def imageUpload(user_id, image_id):
+    pass
+
+
+@app.route('user/<int:user_id>/<int:image_id>/edit_image')
+def editImage(user_id, image_id):
+    pass
+
+
+@app.route('user/<int:user_id>/<int:image_id>/delete_image')
+def editImage(user_id, image_id):
+    pass
+
+@app.route('/user/<int:user_id>/profile')
+def userProfile(user_id):
+    pass
+
+
+@app.route('/search'):
+def search():
+    pass
+
+
+
 if __name__ == '__main__':
         app.secret_key = 'secret@'
         app.run(debug=True)
