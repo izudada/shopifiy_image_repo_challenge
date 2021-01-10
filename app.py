@@ -9,8 +9,21 @@ from werkzeug.utils import secure_filename
 # sys.path.insert(0, os.path.dirname(__file__))
 app = Flask(__name__)
 
+# Config MySQL
+app.config['MYSQL_HOST'] = '127.0.0.1'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'image_repo'
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+
+app.config['IMAGE_UPLOADS'] = '/home/tony-medici/Projects/POS/static/images/logo'
+app.config['ALLOWED_IMAGE_EXTENSION'] = ['PNG', 'JPG', 'JPEG', 'GIF']
+app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
+
+
 # init MYSQL
 mysql = MySQL(app)
+
 
 @app.route('/')
 def index():
