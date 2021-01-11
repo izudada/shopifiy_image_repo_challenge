@@ -32,8 +32,9 @@ def index():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    # Get Signup Template Form Fields
+    # Get Signup Template Form Fields with request.form
     if request.method == 'POST':
+        form = request.form
         fullname =request.form['fullname']
         username = request.form['username']
         email = request.form['email']
@@ -47,7 +48,7 @@ def signup():
         result = cur.execute("SELECT email FROM users WHERE email=%s", [email])
         if result > 0:
                 flash("Sorry, Account ALready Exits", "danger")
-                return redirect(url_for('login'))
+                return redirect(url_for('signup', form = form))
         else:
             cur.execute("INSERT users (full_name, username, email, password, create_date, create_time) VALUES(%s, %s, %s, %s, Now(), Now())", (fullname , username, email, password))
 
@@ -63,8 +64,43 @@ def signup():
     return render_template('signup.html')
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        
+        #   Create Mysql cursor
+        cur = mysql.connection.cursor()
+        #   Get user detail with mail
+        result = cur.execute("SELECT * FROM users WHERE email = %s", [email])
+
+        #   If user record exists in Database
+        if result > 0:
+            data = cur.fetchone()
+            retrived_password = data['password']
+
+            Cart = {}
+
+            #   Compare both passwords for authentication
+            if sha256_crypt.verify(password, retrived_password):
+                # Passed
+                session['logged_in'] = True
+                session["Shoppingcart"] = Cart
+                session['id'] = data['id']
+
+                # Commit To DB
+                mysql.connection.commit()
+
+                flash('You are now logged in', 'success')
+                return redirect(url_for('index'))
+            else:
+                error = 'Invalid password'
+                return render_template("login.html", error = error)
+        else:
+            error = 'Username not Found'
+            return render_template("login.html", error = error)
+
     return render_template('login.html')
 
 
