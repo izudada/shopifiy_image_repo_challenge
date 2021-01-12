@@ -64,6 +64,18 @@ def signup():
     return render_template('signup.html')
 
 
+# Check If User is Logged In and would be added to all routes where user authentication is needed
+def is_logged_in(f):
+        @wraps(f)
+        def wrap(*args, **kwargs):                   
+                if 'logged_in' in session:
+                        return f(*args, **kwargs)
+                else:
+                        flash('Unauthorized, Please login', 'danger')
+                        return redirect(url_for('login'))
+        return wrap
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
