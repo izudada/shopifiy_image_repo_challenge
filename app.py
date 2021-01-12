@@ -106,7 +106,9 @@ def login():
 
 @app.route('/logout')
 def logout():
-    pass
+        session.clear()
+        flash('You have succesfully logged out', 'success')
+        return redirect(url_for('index'))
 
 
 @app.route('/user/<int:user_id>/<int:image_id>/upload_image')
