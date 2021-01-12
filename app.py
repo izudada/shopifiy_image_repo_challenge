@@ -124,25 +124,30 @@ def logout():
 
 
 @app.route('/user/<int:user_id>/<int:image_id>/upload_image')
+@is_logged_in
 def imageUpload(user_id, image_id):
     pass
 
 
 @app.route('/user/<int:user_id>/<int:image_id>/edit_image')
+@is_logged_in
 def editImage(user_id, image_id):
     pass
 
 
 @app.route('/user/<int:user_id>/<int:image_id>/delete_image')
+@is_logged_in
 def deleteImage(user_id, image_id):
     pass
 
 @app.route('/user/<int:user_id>/profile')
+@is_logged_in
 def userProfile(user_id):
     pass
 
 
 @app.route('/search')
+@is_logged_in
 def search():
     pass
 
