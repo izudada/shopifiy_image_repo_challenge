@@ -3,7 +3,42 @@
 {% block body %} 
     <div class="row">
         <div class="col">
-            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#myModal"> Upload Image</button>
+            <a href="" id="supplier" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#admin"> Settings </a>
+            
+            <!-- The Modal -->
+            <div class="modal" id="admin" >
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <p data-toggle="modal" data-target="#addmodal">
+                                <i class="material-icons icon"> cloud_upload </i>
+                            </p>
+                            <h3 class="modal-title">Upload Image</h3>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <form action="/change_password" method="post" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-label" name="image" id="image">
+                                        <label class="custom-file-label" for="image"> Select Image...</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
