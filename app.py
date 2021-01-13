@@ -16,18 +16,34 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'image_repo'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
-# app.config['IMAGE_UPLOADS'] = '/home/tony-medici/Projects/POS/static/images/logo'
-# app.config['ALLOWED_IMAGE_EXTENSION'] = ['PNG', 'JPG', 'JPEG', 'GIF']
-# app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
+app.config['IMAGE_UPLOADS'] = '/home/tony-medici/Projects/shopify_backend_challenge/static/images/uploads'
+app.config['ALLOWED_IMAGE_EXTENSION'] = ['PNG', 'JPG', 'JPEG', 'GIF', 'SVG']
+app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
 
 
 # init MYSQL
 mysql = MySQL(app)
 
 
+# Function to check the validity of image being uoloaded
+def allowed_imaged(filename):
+    ext = filename.rsplit(".", 1)[1]
+
+    if not "." in filename:
+        return False
+    elif ext.upper() in app.config['ALLOWED_IMAGE_EXTENSION']:
+        return True
+    else:
+        return False
+
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    user_id = 0
+    if 'logged_in' in session: 
+        user_id = session['id']
+    
+    return render_template('index.html', user_id=user_id)
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -72,7 +88,7 @@ def is_logged_in(f):
                         return f(*args, **kwargs)
                 else:
                         flash('Unauthorized, Please login', 'danger')
-                        return redirect(url_for('login'))
+                        return redirect(url_for('index'))
         return wrap
 
 
@@ -123,10 +139,61 @@ def logout():
         return redirect(url_for('index'))
 
 
-@app.route('/user/<int:user_id>/<int:image_id>/upload_image')
+#   Image upload route   
+@app.route('/user/<int:user_id>/upload_image', methods=['GET','POST'])
 @is_logged_in
-def imageUpload(user_id, image_id):
-    pass
+def imageUpload(user_id):
+    if request.method == 'POST':    #   When request to this route is a POST request
+        
+        #   Getting form variables
+        user_id = session['id']
+        title = request.form['title']
+        category = request.form['category']
+        description = request.form['description']
+
+        #   Check if image(s) in form
+        if request.files:
+            #   Getting Image variables
+            images = request.files.getlist('images')
+
+            #   Open database connection
+            cur = mysql.connection.cursor()
+
+            #   Loop image list to get each filename, send to database and save to folder
+            for image in images:
+
+                #   Get image filenames from images list  and ensure it is secure with secure_filename
+                filename = secure_filename(image.filename)
+
+                #   Check if filename is empty
+                if filename == "":
+                    flash("Filename is not supported ")
+                    return redirect(url_for('index'))
+                elif not allowed_imaged(filename):  #   Calling allowed_image function
+                    flash("Image extension is not allowed")
+                    return redirect(url_for('index'))
+
+                #   Send each filename and form data to database as separate rows thus why in a loop
+                cur.execute("INSERT images (user_id, filename, 	title, 	category, description, create_time, create_date) VALUES(%s, %s, %s, %s, %s, Now(), Now())", (user_id , filename, title, category, description))
+
+                #   Save all images to folder
+                image.save(os.path.join(app.config['IMAGE_UPLOADS'], filename))
+
+            # Commit To Database
+            mysql.connection.commit()
+
+            # CLose Connection
+            cur.close()
+        
+        else:
+            flash("Image upload unssuccessful", "danger")
+            return redirect(url_for('index'))
+        
+        #   Success feedback to user after successful upload
+        flash("Image upload successful", "success")
+        return redirect(url_for('index'))
+    
+    return render_template('index.html')
 
 
 @app.route('/user/<int:user_id>/<int:image_id>/edit_image')

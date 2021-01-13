@@ -3,7 +3,7 @@
 {% block body %} 
     <div class="row">
         <div class="col">
-            <a href="" id="supplier" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#admin"> Settings </a>
+            <a href="" id="supplier" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#admin"> Upload Image </a>
             
             <!-- The Modal -->
             <div class="modal" id="admin" >
@@ -21,13 +21,31 @@
 
                         <!-- Modal body -->
                         <div class="modal-body">
-                            <form action="/change_password" method="post" enctype="multipart/form-data">
+                            <form action="/user/{{user_id}}/upload_image" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-label" name="image" id="image">
-                                        <label class="custom-file-label" for="image"> Select Image...</label>
-                                    </div>
+                                    <label for="title">Title</label>
+                                    <input type="text" class="form-control-file" name="title" id="title">
                                 </div>
+                                <div class="form-group">
+                                    <label for="category">Category</label>
+                                    <select class="form-control" name="category" id="category">
+                                      <option>None</option>
+                                      <option>Illustration</option>
+                                      <option>Photo</option>
+                                      <option>Vector</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea class="form-control" name="description" id="description" rows="3"></textarea>
+                                </div>
+                                <div class="form-group"> 
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-label" name="images" id="images" multiple="true" autocomplete="off" required>  
+                                        <label class="custom-file-label" for="images"> Select Image(s)...</label>  
+                                    </div>                                   
+                                </div> 
+                                <button class="btn btn-primary btn-sm"> Upload </button>
                             </form>
                         </div>
 
