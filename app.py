@@ -37,6 +37,7 @@ def allowed_imaged(filename):
         return False
 
 
+#   Index/landing page route
 @app.route('/')
 def index():
     user_id = 0
@@ -53,6 +54,7 @@ def index():
     return render_template('index.html', user_id=user_id, images=images)
 
 
+#`Signup route`
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     # Get Signup Template Form Fields with request.form
@@ -99,6 +101,7 @@ def is_logged_in(f):
         return wrap
 
 
+#   Login route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -139,6 +142,7 @@ def login():
     return render_template('login.html')
 
 
+#   Logout  Route
 @app.route('/logout')
 def logout():
         session.clear()
@@ -203,6 +207,7 @@ def imageUpload(user_id):
     return render_template('index.html')
 
 
+#   Delete image route
 @app.route('/user/<int:user_id>/<int:image_id>/delete_image', methods=['POST'])
 @is_logged_in
 def deleteImage(user_id, image_id):
@@ -231,12 +236,15 @@ def deleteImage(user_id, image_id):
     
     return redirect(url_for('index'))
 
+
+#   Route for user profile
 @app.route('/user/<int:user_id>/profile')
 @is_logged_in
 def userProfile(user_id):
     pass
 
 
+#   Route for searching image
 @app.route('/search')
 @is_logged_in
 def search():
