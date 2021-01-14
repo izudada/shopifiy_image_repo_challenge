@@ -42,8 +42,15 @@ def index():
     user_id = 0
     if 'logged_in' in session: 
         user_id = session['id']
+
+    cur = mysql.connection.cursor()
+
+    result = cur.execute("SELECT * FROM images ")
+    images = cur.fetchall()
+
+    cur.close()
     
-    return render_template('index.html', user_id=user_id)
+    return render_template('index.html', user_id=user_id, images=images)
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -196,10 +203,33 @@ def imageUpload(user_id):
     return render_template('index.html')
 
 
-@app.route('/user/<int:user_id>/<int:image_id>/delete_image')
+@app.route('/user/<int:user_id>/<int:image_id>/delete_image', methods=['POST'])
 @is_logged_in
 def deleteImage(user_id, image_id):
-    pass
+    if request.method == 'POST':
+        user_id = session['id']
+        cur = mysql.connection.cursor()
+
+        #   Select flename from Database
+        get = cur.execute("SELECT filename FROM images WHERE id = %s", [image_id])
+        filename = cur.fetchone()
+        image = filename['filename']
+
+        #   Delete image data from Database
+        cur.execute("DELETE FROM images WHERE id = %s", [image_id])
+
+        #   Delete image from folder
+        os.remove(f"static/images/uploads/{image}")
+
+        # Commit To Database
+        mysql.connection.commit()
+
+        cur.close()
+
+        flash("Image successfully deleted", "success")
+        return redirect(url_for('index'))
+    
+    return redirect(url_for('index'))
 
 @app.route('/user/<int:user_id>/profile')
 @is_logged_in

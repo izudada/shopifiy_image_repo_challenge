@@ -1,3 +1,25 @@
 main{
-    margin: 40px 0 230px 0;
+    margin: 30px 0 230px 0;
+}
+
+.image-display{
+    width: 200px;
+    height: auto;
+    margin: 5px;
+    box-sizing: content-box;
+    overflow: hidden;
+}
+
+.image-display img {
+    display: inline;
+    width: 90%;
+    /* height: 100%; */
+}
+
+.hold{
+    padding-top: 20px;
+}
+
+.del{
+    margin-top: 10px;
 }
