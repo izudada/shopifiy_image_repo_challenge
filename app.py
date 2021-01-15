@@ -212,27 +212,32 @@ def imageUpload(user_id):
 @is_logged_in
 def deleteImage(user_id, image_id):
     if request.method == 'POST':
-        user_id = session['id']
         cur = mysql.connection.cursor()
 
         #   Select flename from Database
-        get = cur.execute("SELECT filename FROM images WHERE id = %s", [image_id])
+        get = cur.execute("SELECT filename, user_id FROM images WHERE id = %s", [image_id])
         filename = cur.fetchone()
         image = filename['filename']
 
-        #   Delete image data from Database
-        cur.execute("DELETE FROM images WHERE id = %s", [image_id])
+        #   Check to see if user ia authorised to delete image. Only the user who uploaded can delete. User_id is a foreign key in images table
+        if filename['user_id'] == session['id']:
 
-        #   Delete image from folder
-        os.remove(f"static/images/uploads/{image}")
+            #   Delete image data from Database
+            cur.execute("DELETE FROM images WHERE id = %s", [image_id])
 
-        # Commit To Database
-        mysql.connection.commit()
+            #   Delete image from folder
+            os.remove(f"static/images/uploads/{image}")
 
-        cur.close()
+            # Commit To Database
+            mysql.connection.commit()
 
-        flash("Image successfully deleted", "success")
-        return redirect(url_for('index'))
+            cur.close()
+
+            flash("Image successfully deleted", "success")
+            return redirect(url_for('index'))
+        else:
+            flash("You are not authorised to delete this image", "danger")
+            return redirect(url_for('index'))
     
     return redirect(url_for('index'))
 
@@ -245,10 +250,21 @@ def userProfile(user_id):
 
 
 #   Route for searching image
-@app.route('/search')
-@is_logged_in
+@app.route('/search', methods=['GET', 'POST'])
 def search():
-    pass
+    if request.method == 'POST':
+        title = request.form['search']
+
+        cur = mysql.connection.cursor()
+
+        result = cur.execute("SELECT * FROM images WHERE title =%s ", [title])
+        search = cur.fetchall()
+
+        cur.close()
+
+        return render_template('search.html', search=search)
+
+    return render_template('search.html')
 
 
 
