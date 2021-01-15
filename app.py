@@ -268,6 +268,23 @@ def search():
     return render_template('search.html')
 
 
+#   Route for viewing image by category
+@app.route('/view_category/ilustration', methods=['GET', 'POST'])
+def ilustration():
+    cur = mysql.connection.cursor()
+
+    #   Query Database
+    result = cur.execute("SELECT * FROM images WHERE category = %s ORDER BY id DESC", ["ilustration"]) 
+    search = cur.fetchall()
+
+    cur.close()
+
+    if result > 0:
+        return render_template('search.html', search=search)
+    else:
+        flash("No image under this category yet", "danger")
+        return render_template('search.html')
+
 
 if __name__ == '__main__':
         app.secret_key = 'secret@'
