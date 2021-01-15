@@ -18,7 +18,7 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 app.config['IMAGE_UPLOADS'] = '/home/tony-medici/Projects/shopify_backend_challenge/static/images/uploads'
 app.config['ALLOWED_IMAGE_EXTENSION'] = ['PNG', 'JPG', 'JPEG', 'GIF', 'SVG']
-app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024
 
 
 # init MYSQL
@@ -253,11 +253,12 @@ def userProfile(user_id):
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method == 'POST':
-        title = request.form['search']
+        title = "%" + request.form['search'] + "%"  #   COllect search string from search box on navbar
 
         cur = mysql.connection.cursor()
 
-        result = cur.execute("SELECT * FROM images WHERE title =%s ", [title])
+        #   Query Database
+        result = cur.execute("SELECT * FROM images WHERE title LIKE %s ORDER BY id DESC", [title]) 
         search = cur.fetchall()
 
         cur.close()
