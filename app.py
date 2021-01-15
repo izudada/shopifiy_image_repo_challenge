@@ -263,9 +263,11 @@ def search():
 
         cur.close()
 
-        return render_template('search.html', search=search)
-
-    return render_template('search.html')
+        if result > 0:
+            return render_template('search.html', search=search)
+        else:
+            flash("Opps! There is no image with such title", "danger")
+            return render_template('search.html')
 
 
 #   Route for viewing image by category
