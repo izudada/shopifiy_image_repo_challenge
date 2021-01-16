@@ -30,39 +30,44 @@ This is a repository for shopify backend challenge. with some of the required fe
 - Bootstrap
 - Xampp
 
-[Back To The Top](#read-me-template)
-
 ---
 
 ## How To Use
-- Download and instal [python](https://www.python.org/downloads/)
-- Download and instal python package manager [pip](https://pip.pypa.io/en/stable/installing/)
-- Download and install [Xampp](https://www.apachefriends.org/index.html)
+- Download and instal [python3](https://www.python.org/downloads/)
+- Download and instal python package manager [pip3](https://pip.pypa.io/en/stable/installing/)
+- Download and install [xampp](https://www.apachefriends.org/index.html)
 
 #### Installation
 1. Clone the repo
    ```sh
-    github.com/izudada/shopifiy_image_repo_challenge.git
+    git clone github.com/izudada/shopifiy_image_repo_challenge.git
    ```
-2. 
+2.  Use pip to install all the project requirements/libraries
+   ```sh
+    pip3 install requirements.txt
+   ```
+3.  Open xammp, create new database "image_repo" and import "image_repo.sql" file
 
-
-
-[Back To The Top](#read-me-template)
+4.  open terminal and run:
+   ```sh
+    python3 app.py 
+   ```
+   or
+   ```sh
+    flask run
+   ```
+5.  Open a browser tab visit "http://localhost:5000/"
 
 ---
 
 ## References
-[Back To The Top](#read-me-template)
 
----
-
-[Back To The Top](#read-me-template)
 
 ---
 
 ## Author Info
 
 - Twitter - [@_izudada](https://twitter.com/_izudada)
+
 
 [Back To The Top](#read-me-template)
