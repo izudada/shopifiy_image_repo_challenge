@@ -150,8 +150,15 @@ def logout():
         return redirect(url_for('index'))
 
 
+@app.route('/user/image_upload')
+@is_logged_in
+def upload():
+    user_id = session['id']
+    return render_template('add_new_image.html', user_id=user_id)
+
+
 #   Image upload route   
-@app.route('/user/<int:user_id>/upload_image', methods=['GET','POST'])
+@app.route('/user/<int:user_id>/upload_image', methods=['POST'])
 @is_logged_in
 def imageUpload(user_id):
     if request.method == 'POST':    #   When request to this route is a POST request
@@ -159,7 +166,7 @@ def imageUpload(user_id):
         #   Getting form variables
         user_id = session['id']
         title = request.form['title']
-        category = request.form['category']
+        category = request.form['category'].lower()
         description = request.form['description']
 
         #   Check if image(s) in form
@@ -268,15 +275,19 @@ def search():
         else:
             flash("Opps! There is no image with such title", "danger")
             return render_template('search.html')
+    
+    return render_template('search.html')
 
 
-#   Route for viewing image by category
-@app.route('/view_category/ilustration', methods=['GET', 'POST'])
-def ilustration():
+
+#   Route for viewing image by category = photo
+@app.route('/view_category/photos')
+def photo():
+    category = "photo"
     cur = mysql.connection.cursor()
 
     #   Query Database
-    result = cur.execute("SELECT * FROM images WHERE category = %s ORDER BY id DESC", ["ilustration"]) 
+    result = cur.execute("SELECT filename FROM images WHERE category = %s ORDER BY id DESC", [category]) 
     search = cur.fetchall()
 
     cur.close()
@@ -285,7 +296,7 @@ def ilustration():
         return render_template('search.html', search=search)
     else:
         flash("No image under this category yet", "danger")
-        return render_template('search.html')
+        return render_template('view_category.html')
 
 
 if __name__ == '__main__':
