@@ -28,11 +28,11 @@
                     View Categories
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="">Illustration</a>
+                        <a class="dropdown-item" href="{{url_for('illustration')}}">Illustration</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{url_for('photo')}}">Photo</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="">Vector</a>
+                        <a class="dropdown-item" href="{{url_for('vector')}}">Vector</a>
                     </div>
                 </li>
                 {% if 'logged_in' in session %}

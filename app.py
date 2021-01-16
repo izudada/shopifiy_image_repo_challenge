@@ -279,15 +279,14 @@ def search():
     return render_template('search.html')
 
 
-
-#   Route for viewing image by category = photo
-@app.route('/view_category/photos')
-def photo():
-    category = "photo"
+#   Route for viewing image by category = illustration
+@app.route('/view_category/illustration')
+def illustration():
+    category = "illustration"
     cur = mysql.connection.cursor()
 
     #   Query Database
-    result = cur.execute("SELECT filename FROM images WHERE category = %s ORDER BY id DESC", [category]) 
+    result = cur.execute("SELECT * FROM images WHERE category = %s ORDER BY id DESC", [category]) 
     search = cur.fetchall()
 
     cur.close()
@@ -296,7 +295,46 @@ def photo():
         return render_template('search.html', search=search)
     else:
         flash("No image under this category yet", "danger")
-        return render_template('view_category.html')
+        return render_template('search.html')
+
+
+#   Route for viewing image by category = photo
+@app.route('/view_category/photos')
+def photo():
+    category = "photo"
+    cur = mysql.connection.cursor()
+
+    #   Query Database
+    result = cur.execute("SELECT * FROM images WHERE category = %s ORDER BY id DESC", [category]) 
+    search = cur.fetchall()
+
+    cur.close()
+
+    if result > 0:
+        return render_template('search.html', search=search)
+    else:
+        flash("No image under this category yet", "danger")
+        return render_template('search.html')
+        
+
+#   Route for viewing image by category = vector
+@app.route('/view_category/vector')
+def vector():
+    category = "vector"
+    cur = mysql.connection.cursor()
+
+    #   Query Database
+    result = cur.execute("SELECT * FROM images WHERE category = %s ORDER BY id DESC", [category]) 
+    search = cur.fetchall()
+
+    cur.close()
+
+    if result > 0:
+        return render_template('search.html', search=search)
+    else:
+        flash("No image under this category yet", "danger")
+        return render_template('search.html')
+
 
 
 if __name__ == '__main__':
