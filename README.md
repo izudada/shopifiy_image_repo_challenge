@@ -2,8 +2,6 @@
 
 ![Project Image](static/images/uploads/carbon.png)
 
-> This is a ReadMe template to help save you time and effort.
-
 ---
 
 ### Table of Contents
@@ -21,7 +19,6 @@ This is a repository for shopify backend challenge. with some of the required fe
 - SEARCH function (from characteristics of the images, from text )
 - ADD image(s) to the repository (one / bulk / enormous amount of images, private or public (permissions), secure uploading and stored images)
 - DELETE image(s) (one, Prevent a user deleting images from another user (access control), secure deletion of images)
-
 
 
 #### Technologies
@@ -61,7 +58,12 @@ This is a repository for shopify backend challenge. with some of the required fe
 ---
 
 ## References
-
+* [Readme Template](https://www.youtube.com/watch?v=eVGEea7adDM&t=190s)
+* [Flaak Documentation](https://flask.palletsprojects.com/en/1.1.x/)
+* [Get Bootstrap](https://getbootstrap.com/)
+* [Get Bootstrap](https://getbootstrap.com/)
+* [Get Xampp](https://www.apachefriends.org/index.html)
+* [Get Python](https://www.python.org/downloads/)
 
 ---
 
