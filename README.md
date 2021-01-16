@@ -1,6 +1,6 @@
 # Read Me Template
 
-![Project Image](static/images/uploads/carbon.png)
+![Project Image](static/images/image.png)
 
 ---
 
