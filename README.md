@@ -64,6 +64,7 @@ This is a repository for shopify backend challenge. with some of the required fe
 * [Get Bootstrap](https://getbootstrap.com/)
 * [Get Xampp](https://www.apachefriends.org/index.html)
 * [Get Python](https://www.python.org/downloads/)
+* [Paystack Payment API](https://paystack.com/docs/api/)
 
 ---
 
