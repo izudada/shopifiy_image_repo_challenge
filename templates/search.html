@@ -4,14 +4,19 @@
     <div class="row hold">
         {% for items in search %}
             <div class="col-sm-3 image-display">
-                <img src="../static/images/uploads/{{items.filename}}" alt="">
-                {% if 'logged_in' in session %}
-                    <div class="form-group del">
-                        <form action="{{url_for('deleteImage', user_id=items.user_id, image_id=items.id )}}" method="post">
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
+                <img src="../static/images/uploads/{{items.filename}}" alt="">                
+                <div class="form-group row">
+                    {% if 'logged_in' in session %}
+                        <div class="col-sm-6">
+                            <form action="{{url_for('deleteImage', user_id=items.user_id, image_id=items.id )}}" method="post">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                    <div class="col-sm-6">
+                        <a href="{{url_for('view_image', image_id=items.id)}}" class="btn btn-success btn-sm">View</a>
                     </div>
-                {% endif %}
+                </div>
             </div>
         {% endfor %}
     </div>

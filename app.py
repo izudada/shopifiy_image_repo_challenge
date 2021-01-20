@@ -7,7 +7,7 @@ from functools import wraps
 from werkzeug.utils import secure_filename
 
 # sys.path.insert(0, os.path.dirname(__file__))
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 # Config MySQL
 app.config['MYSQL_HOST'] = '127.0.0.1'
@@ -166,6 +166,7 @@ def imageUpload(user_id):
         #   Getting form variables
         user_id = session['id']
         title = request.form['title']
+        price = request.form['price']
         category = request.form['category'].lower()
         description = request.form['description']
 
@@ -192,7 +193,7 @@ def imageUpload(user_id):
                     return redirect(url_for('index'))
 
                 #   Send each filename and form data to database as separate rows thus why in a loop
-                cur.execute("INSERT images (user_id, filename, 	title, 	category, description, create_time, create_date) VALUES(%s, %s, %s, %s, %s, Now(), Now())", (user_id , filename, title, category, description))
+                cur.execute("INSERT images (user_id, filename, 	title, 	price, category, description, create_time, create_date) VALUES(%s, %s, %s, %s, %s, %s, Now(), Now())", (user_id , filename, title, price, category, description))
 
                 #   Save all images to folder
                 image.save(os.path.join(app.config['IMAGE_UPLOADS'], filename))
@@ -247,6 +248,28 @@ def deleteImage(user_id, image_id):
             return redirect(url_for('index'))
     
     return redirect(url_for('index'))
+
+
+@app.route('/view_image/<int:image_id>/')
+def view_image(image_id):
+    user_id = 0
+    if 'id' in  session:
+        user_id = session['id']
+
+    cur = mysql.connection.cursor()
+
+    #   Select flename from Database
+    get = cur.execute("SELECT * FROM images WHERE id = %s", [image_id])
+    image = cur.fetchone()
+
+    #   USing user_id value from images table to get the author of the image from users table
+    user = cur.execute("SELECT full_name FROM users where id = %s", [image['user_id']])
+    data = cur.fetchone()
+    author = data['full_name']
+
+    cur.close()
+    
+    return render_template('view.html', image=image, author=author, user_id=user_id)
 
 
 #   Route for user profile

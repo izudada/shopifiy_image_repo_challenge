@@ -1,9 +1,94 @@
 {% extends "layout.html" %}
     
 {% block body %} 
-    <div class="row">
-        <div class="col">
+   
+    <div class="row hold">
+        <div class="col-sm-3 image-display">
+            <img class="img-responsive" src="../../static/images/uploads/{{image.filename}}" alt="">
+            <div class="form-group row">
+                {% if 'logged_in' in session %}
+                    <div class="col-sm-6">
+                        <form action="{{url_for('deleteImage', user_id=user_id, image_id=image.id )}}" method="post">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <table class="table table-responsive"">
+                <thead>
+                  <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Prrice</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">{{image.title}}</th>
+                    <td>{{image.category}}</td>
+                    <td>{{image.description}}</td>
+                    <td>{{author}}</td>
+                    <td>{{image.price}}</td>
+                  </tr>
+                  <tr>
+                    <td> 
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal"> Buy </button>
+                        <!-- The Modal -->
+                        <div class="modal" id="myModal">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
 
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h1 class="modal-title">Buy Product </h1>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                        <form id="paymentForm">
+                                            <div class="form-group">
+                                              <label for="email">Email Address</label>
+                                              <input type="email" id="email-address" required />
+                                            </div>
+                                            <div class="form-group">
+                                              <label for="amount">Amount</label>
+                                              <input type="tel" id="amount" value="{{image.price}}" required />
+                                            </div>
+                                            <div class="form-group">
+                                              <label for="first-name">First Name</label>
+                                              <input type="text" id="first-name" />
+                                            </div>
+                                            <div class="form-group">
+                                              <label for="last-name">Last Name</label>
+                                              <input type="text" id="last-name" />
+                                            </div>
+                                            <div class="form-submit">
+                                              <button type="submit" onclick="payWithPaystack()"> Pay </button>
+                                            </div>
+                                        </form>
+                                          <script src="https://js.paystack.co/v1/inline.js"></script> 
+                                    </div>
+
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+
+                                        <!-- <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button> -->
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </td> 
+                  </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock %}
