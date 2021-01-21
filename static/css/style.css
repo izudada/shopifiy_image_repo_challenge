@@ -27,3 +27,7 @@ footer p, .features {
 footer{
     background-color: black !important;
 }
+
+hr{
+    margin-top: 50px;
+}

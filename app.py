@@ -166,6 +166,7 @@ def imageUpload(user_id):
         #   Getting form variables
         user_id = session['id']
         title = request.form['title']
+        color = request.form['color']
         price = request.form['price']
         category = request.form['category'].lower()
         description = request.form['description']
@@ -193,7 +194,7 @@ def imageUpload(user_id):
                     return redirect(url_for('index'))
 
                 #   Send each filename and form data to database as separate rows thus why in a loop
-                cur.execute("INSERT images (user_id, filename, 	title, 	price, category, description, create_time, create_date) VALUES(%s, %s, %s, %s, %s, %s, Now(), Now())", (user_id , filename, title, price, category, description))
+                cur.execute("INSERT images (user_id, filename, 	title, color, price, category, description, create_time, create_date) VALUES(%s, %s, %s, %s, %s, %s, %s, Now(), Now())", (user_id , filename, title, color, price, category, description))
 
                 #   Save all images to folder
                 image.save(os.path.join(app.config['IMAGE_UPLOADS'], filename))
@@ -262,6 +263,10 @@ def view_image(image_id):
     get = cur.execute("SELECT * FROM images WHERE id = %s", [image_id])
     image = cur.fetchone()
 
+    # For suggested Images
+    others =cur.execute("SELECT * FROM images WHERE title = %s and id != %s", [image['title'], image_id])
+    suggested = cur.fetchall()
+
     #   USing user_id value from images table to get the author of the image from users table
     user = cur.execute("SELECT full_name FROM users where id = %s", [image['user_id']])
     data = cur.fetchone()
@@ -269,7 +274,7 @@ def view_image(image_id):
 
     cur.close()
     
-    return render_template('view.html', image=image, author=author, user_id=user_id)
+    return render_template('view.html', image=image, author=author, user_id=user_id, suggested=suggested)
 
 
 #   Route for user profile

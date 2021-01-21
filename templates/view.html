@@ -20,6 +20,7 @@
                 <thead>
                   <tr>
                     <th scope="col">Title</th>
+                    <th scope="col">Color</th>
                     <th scope="col">Category</th>
                     <th scope="col">Description</th>
                     <th scope="col">Author</th>
@@ -29,6 +30,7 @@
                 <tbody>
                   <tr>
                     <th scope="row">{{image.title}}</th>
+                    <th>{{image.color}}</th>
                     <td>{{image.category}}</td>
                     <td>{{image.description}}</td>
                     <td>{{author}}</td>
@@ -90,5 +92,29 @@
                 </tbody>
             </table>
         </div>
+
     </div>
+
+    <hr>
+    
+    <h3> Similar Photos </h3>
+    <div class="row hold">
+      {% for items in suggested %}
+          <div class="col-sm-3 image-display">
+              <img src="../../static/images/uploads/{{items.filename}}" alt="">                
+              <div class="form-group row">
+                  {% if 'logged_in' in session %}
+                      <div class="col-sm-6">
+                          <form action="{{url_for('deleteImage', user_id=items.user_id, image_id=items.id )}}" method="post">
+                              <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                          </form>
+                      </div>
+                  {% endif %}
+                  <div class="col-sm-6">
+                      <a href="{{url_for('view_image', image_id=items.id)}}" class="btn btn-success btn-sm">View</a>
+                  </div>
+              </div>
+          </div>
+      {% endfor %}
+  </div>
 {% endblock %}
