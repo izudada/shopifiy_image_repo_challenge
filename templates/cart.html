@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+    
+{% block body %} 
+    <div class="row hold">
+        {% for key, value in session["Cart"].items() %}
+            <div class="cart">
+                <table class="table table-responsive">
+                    <tr>
+                        <td>
+                            <div class="col-sm-9">
+                                <img class="img-responsive" src="../../static/images/uploads/{{value.filename}}" alt="">
+                            </div>
+                        </td>
+                        <td>Price: {{value.price}}</td>
+                        <td>Quantity: {{value.quantity}}</td>
+                        <td>Total: {{value.total}}</td>
+                    </tr>
+                </table>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row hold">
+        <td> 
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal"> Buy </button>
+            <!-- Buy Modal -->
+            <div class="modal" id="myModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h1 class="modal-title">Buy Product </h1>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <form id="paymentForm">
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <input type="email" id="email-address" required />
+                                </div>
+                                <div class="form-group">
+                                    <label for="amount">Amount</label>
+                                    <input type="tel" id="amount" value="{{grandtotal}}" required readonly/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="first-name">First Name</label>
+                                    <input type="text" id="first-name" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="last-name">Last Name</label>
+                                    <input type="text" id="last-name" />
+                                </div>
+                                <div class="form-submit">
+                                    <button type="submit" onclick="payWithPaystack()"> Pay </button>
+                                </div>
+                            </form>
+                                <script src="https://js.paystack.co/v1/inline.js"></script>
+                                <!-- For Paystack PAyment API  -->
+                                <script>
+                                    const paymentForm = document.getElementById('paymentForm');
+                                    paymentForm.addEventListener("submit", payWithPaystack, false);
+                                    function payWithPaystack(e) {
+                                    e.preventDefault();
+                                    let handler = PaystackPop.setup({
+                                        key: 'pk_test_2a103fff399a08f2d518f21bdb92d14278207fa5', // Replace with your public key
+                                        email: document.getElementById("email-address").value,
+                                        amount: document.getElementById("amount").value * 100,
+                                        ref: ''+Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+                                        // label: "Optional string that replaces customer email"
+                                        onClose: function(){
+                                        alert('Window closed.');
+                                        },
+                                        callback: function(response){
+                                        let message = 'Payment complete! Reference: ' + response.reference;
+                                        alert(message);
+                                        }
+                                    });
+                                    handler.openIframe();
+                                    }
+                                </script>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </td> 
+    </div>
+{% endblock %}

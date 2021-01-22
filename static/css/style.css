@@ -17,6 +17,7 @@ main{
 }
 
 .hold{
+    margin: 20px 0 0 50px;
     padding-top: 20px;
 }
 
@@ -30,4 +31,16 @@ footer{
 
 hr{
     margin-top: 50px;
+}
+
+.cart{
+    width: 89%;
+    height: 60px;
+    box-shadow: 4px 5px 5px rgba(88, 152, 196, 0.6);
+}
+
+.cart img{
+    width: 40%;
+    height: 60px;
+    padding-bottom: 20px;
 }

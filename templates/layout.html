@@ -51,6 +51,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{url_for('upload')}}">Upload</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('cart')}}">Cart ({{session["Cart"]|length}})</a>
+                </li>
             </ul>
 
             <form class="form-inline my-2 my-lg-0" action="{{url_for('search')}}" method="post">
@@ -86,9 +89,11 @@
                     This is a backend <em> internship application </em> challenge by <em> shopify </em> which was to build an image repository with features like:
 
                     <ul class="features">
-                        <li>SEARCH function</li>
+                        <li>Search function</li>
                         <li>ADD image(s) to the repository</li>
                         <li>DELETE image</li>
+                        <li>Buy image(s)</li>
+                        <li>Cart System</li>
                     </ul>
                 </p>
                 </div>
@@ -153,30 +158,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-
-    <!-- For Paystack PAyment API  -->
-    <script>
-        const paymentForm = document.getElementById('paymentForm');
-        paymentForm.addEventListener("submit", payWithPaystack, false);
-        function payWithPaystack(e) {
-        e.preventDefault();
-        let handler = PaystackPop.setup({
-            key: 'pk_test_2a103fff399a08f2d518f21bdb92d14278207fa5', // Replace with your public key
-            email: document.getElementById("email-address").value,
-            amount: document.getElementById("amount").value * 100,
-            ref: ''+Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
-            // label: "Optional string that replaces customer email"
-            onClose: function(){
-            alert('Window closed.');
-            },
-            callback: function(response){
-            let message = 'Payment complete! Reference: ' + response.reference;
-            alert(message);
-            }
-        });
-        handler.openIframe();
-        }
-    </script>
 
 </body>
 </html>

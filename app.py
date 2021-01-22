@@ -107,6 +107,7 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
+        Cart = {}
         
         #   Create Mysql cursor
         cur = mysql.connection.cursor()
@@ -118,13 +119,11 @@ def login():
             data = cur.fetchone()
             retrived_password = data['password']
 
-            Cart = {}
-
             #   Compare both passwords for authentication
             if sha256_crypt.verify(password, retrived_password):
                 # Passed
                 session['logged_in'] = True
-                session["Shoppingcart"] = Cart
+                session["Cart"] = Cart
                 session['id'] = data['id']
 
                 # Commit To DB
@@ -363,6 +362,70 @@ def vector():
         flash("No image under this category yet", "danger")
         return render_template('search.html')
 
+
+#   Function to add item(s) to cart if cart is not empty
+def AddDicts(dict1, dict2):
+    if isinstance(dict1, list) and isinstance(dict2, list):
+        return dict1 + dict2
+    elif isinstance(dict1, dict) and isinstance(dict2, dict):
+        return dict( list(dict1.items()) + list(dict2.items()) )
+    else:
+        return False
+
+
+#   Route for displaying cart
+@app.route('/cart')
+@is_logged_in
+def cart():
+    grandtotal = 0
+    for key, value in session["Cart"].items():
+        grandtotal += value["total"]
+
+    return render_template('cart.html', grandtotal=grandtotal)
+
+
+@app.route("/add_to_cart/<string:image_id>", methods=['POST'])
+@is_logged_in
+def add_to_cart(image_id):
+    if request.method == 'POST':
+        quantity = int(request.form['quantity']) #   Modal for data for adding item to cart
+
+        cur = mysql.connection.cursor()
+        result = cur.execute("SELECT * FROM images WHERE id = %s", [image_id]) #    Get image data from database
+        data = cur.fetchone()
+
+        if data:
+            image = {
+                image_id : {
+                    "filename" : data['filename'],
+                    "price" : data['price'],
+                    "quantity" : quantity,
+                    "total" : 0
+                }
+            }
+
+            for key, value in image.items():
+                value["total"] = int(value["price"]) * value["quantity"]
+
+        if "Cart" in session:
+            if image_id in session["Cart"]:
+                for key, value in session["Cart"].items():
+                    if int(image_id) == int(key):
+                        value["quantity"] += int(quantity)
+                        value["total"] = int(value["price"]) *int(value["quantity"])
+            
+                flash("Item quantity updated", "success")
+                return redirect(url_for('cart'))
+            else:
+                session["Cart"] = AddDicts(session["Cart"], image)
+                return redirect(url_for('cart'))
+        else:
+            session['Cart'] = image
+            return redirect(url_for('cart'))
+
+        cur.close()
+
+    return redirect(url_for('cart'))
 
 
 if __name__ == '__main__':
